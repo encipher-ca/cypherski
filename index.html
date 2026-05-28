@@ -97,18 +97,14 @@
     .logo-text {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: clamp(28px, 8cqi, 52px);
       letter-spacing: 0.08em;
       line-height: 1;
       color: var(--white);
       text-transform: uppercase;
       display: block;
-      width: 100%;
-      text-align: center;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: clip;
       text-shadow: 0 0 60px rgba(255,255,255,0.12);
+      font-size: 16px; /* JS will override this */
     }
 
     .cards {
@@ -306,7 +302,24 @@
   <p class="footer">© Cypherski</p>
 
   <script>
-    const canvas = document.getElementById('bg');
+    // Auto-fit logo to container width
+    function fitLogo() {
+      const el = document.querySelector('.logo-text');
+      const container = document.querySelector('.logo-wrap');
+      const maxWidth = container.clientWidth;
+      const maxSize = 64;
+      const minSize = 18;
+      let size = maxSize;
+      el.style.fontSize = size + 'px';
+      while (el.scrollWidth > maxWidth && size > minSize) {
+        size -= 0.5;
+        el.style.fontSize = size + 'px';
+      }
+    }
+    fitLogo();
+    window.addEventListener('resize', fitLogo);
+
+    // Canvas background
     const ctx = canvas.getContext('2d');
     const grainCanvas = document.getElementById('grain');
     const gctx = grainCanvas.getContext('2d');
