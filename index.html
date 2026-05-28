@@ -30,7 +30,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 48px 24px 72px;
+      padding: 24px 20px 56px;
       overflow-x: hidden;
     }
 
@@ -97,13 +97,17 @@
     .logo-text {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: clamp(18px, 5.5vw, 42px);
+      font-size: clamp(28px, 8cqi, 52px);
       letter-spacing: 0.08em;
       line-height: 1;
       color: var(--white);
       text-transform: uppercase;
       display: block;
+      width: 100%;
+      text-align: center;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: clip;
       text-shadow: 0 0 60px rgba(255,255,255,0.12);
     }
 
@@ -121,7 +125,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      padding: 20px 22px;
+      padding: 22px 24px;
       background: #000;
       border: 1px solid #1e1e1e;
       text-decoration: none;
@@ -151,7 +155,7 @@
     }
 
     .card-eyebrow {
-      font-size: 9px;
+      font-size: 10px;
       letter-spacing: 0.22em;
       text-transform: uppercase;
       color: #666;
@@ -160,7 +164,7 @@
     .card-title {
       font-family: 'Syne', sans-serif;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 18px;
       letter-spacing: 0.03em;
       line-height: 1.2;
     }
@@ -224,7 +228,7 @@
     }
 
     .social-link:hover { color: #aaa; transform: translateY(-2px); }
-    .social-link svg { width: 16px; height: 16px; fill: currentColor; }
+    .social-link svg { width: 22px; height: 22px; fill: currentColor; }
 
     .footer {
       position: fixed;
@@ -237,11 +241,11 @@
     }
 
     @media (max-width: 390px) {
-      html, body { padding: 32px 16px 56px; }
-      .page { gap: 30px; }
-      .card { padding: 16px 18px; }
-      .socials { gap: 20px; }
-      .social-link svg { width: 15px; height: 15px; }
+      html, body { padding: 16px 16px 48px; }
+      .page { gap: 28px; }
+      .card { padding: 18px 18px; }
+      .card-title { font-size: 16px; }
+      .socials { gap: 24px; }
     }
 
     @keyframes rise {
@@ -266,19 +270,12 @@
 
     <div class="cards">
       <a class="card" href="https://www.youtube.com/watch?v=jTr0Ew03W5A" target="_blank" rel="noopener">
-        <div class="card-left">
-          <span class="card-eyebrow">Latest drop</span>
-          <span class="card-title">Watch on YouTube</span>
-        </div>
+        <span class="card-title">YouTube</span>
         <span class="card-arrow">↗</span>
       </a>
 
       <a class="card" href="https://www.type2ski.co/collabs" target="_blank" rel="noopener">
-        <div class="card-left">
-          <span class="card-eyebrow">Collab</span>
-          <span class="card-title">Cypher × Type2 Skis</span>
-          <span class="card-tag">Limited run</span>
-        </div>
+        <span class="card-title">Cypher x Type2 Skis</span>
         <span class="card-arrow">↗</span>
       </a>
     </div>
