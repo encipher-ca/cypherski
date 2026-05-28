@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> 
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CYPHERSKI</title>
@@ -11,20 +11,21 @@
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --black: #0a0a0a;
-      --white: #f2f0eb;
-      --grey: #555;
-      --accent: #b0a898;
+      --black: #080808;
+      --white: #f0ede8;
+      --grey: #444;
+      --card-bg: #111;
+      --card-border: #1e1e1e;
     }
 
     html, body {
-      height: 100%;
+      min-height: 100dvh;
       background: var(--black);
       color: var(--white);
       font-family: 'DM Mono', monospace;
@@ -32,121 +33,233 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100dvh;
+      padding: 48px 20px 64px;
     }
 
-    body::before {
+    /* Noise grain */
+    body::after {
       content: '';
       position: fixed;
       inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.025;
       pointer-events: none;
-      z-index: 10;
+      z-index: 100;
     }
 
-    .container {
+    .page {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 40px;
-      padding: 48px 24px;
+      gap: 48px;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    /* Logo */
+    .logo-wrap {
       opacity: 0;
-      transform: translateY(10px);
-      animation: fadein 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+      animation: rise 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
     }
 
-    @keyframes fadein {
-      to { opacity: 1; transform: translateY(0); }
+    .logo-text {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(28px, 8vw, 48px);
+      letter-spacing: 0.02em;
+      line-height: 1;
+      color: var(--white);
     }
 
-    .logo {
-      width: min(320px, 68vw);
-      display: block;
-      filter: invert(1);
-    }
-
-    .divider {
-      width: 32px;
-      height: 1px;
-      background: #222;
-    }
-
-    /* Primary links */
-    .primary-links {
+    /* Big link cards */
+    .cards {
       display: flex;
       flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      opacity: 0;
+      animation: rise 0.9s cubic-bezier(0.16,1,0.3,1) 0.2s forwards;
+    }
+
+    .card {
+      display: flex;
       align-items: center;
-      gap: 10px;
-    }
-
-    .link {
-      color: var(--accent);
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 24px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       text-decoration: none;
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      border-bottom: 1px solid transparent;
-      padding-bottom: 2px;
-      transition: color 0.2s, border-color 0.2s;
-    }
-
-    .link:hover {
       color: var(--white);
-      border-color: var(--white);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s, background 0.25s;
     }
 
-    /* Social icons row */
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(105deg, transparent 60%, rgba(255,255,255,0.03));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover {
+      border-color: #383838;
+      background: #161616;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .card-eyebrow {
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--grey);
+    }
+
+    .card-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 0.06em;
+      line-height: 1;
+    }
+
+    .card-arrow {
+      font-size: 18px;
+      color: var(--grey);
+      transition: transform 0.2s, color 0.2s;
+      flex-shrink: 0;
+    }
+
+    .card:hover .card-arrow {
+      transform: translate(3px, -3px);
+      color: var(--white);
+    }
+
+    /* Pill tag on skis card */
+    .card-tag {
+      display: inline-block;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border: 1px solid #2a2a2a;
+      padding: 3px 8px;
+      color: #666;
+      margin-top: 6px;
+      width: fit-content;
+    }
+
+    /* Divider */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: #161616;
+      opacity: 0;
+      animation: rise 0.6s ease 0.35s forwards;
+    }
+
+    /* Socials */
     .socials {
       display: flex;
       align-items: center;
-      gap: 24px;
+      gap: 28px;
+      opacity: 0;
+      animation: rise 0.9s cubic-bezier(0.16,1,0.3,1) 0.4s forwards;
     }
 
     .social-link {
-      color: var(--grey);
-      transition: color 0.2s;
+      color: #333;
       display: flex;
       align-items: center;
+      transition: color 0.2s, transform 0.2s;
     }
 
     .social-link:hover {
       color: var(--white);
+      transform: translateY(-2px);
     }
 
     .social-link svg {
-      width: 18px;
-      height: 18px;
+      width: 17px;
+      height: 17px;
       fill: currentColor;
     }
 
+    /* Footer */
     .footer {
       position: fixed;
-      bottom: 20px;
+      bottom: 18px;
       font-size: 9px;
       letter-spacing: 0.14em;
-      color: #252525;
+      color: #1e1e1e;
       text-transform: uppercase;
+    }
+
+    @media (max-width: 390px) {
+      html, body {
+        padding: 32px 16px 56px;
+      }
+      .page {
+        gap: 36px;
+      }
+      .card {
+        padding: 16px 18px;
+      }
+      .card-title {
+        font-size: 19px;
+      }
+      .socials {
+        gap: 22px;
+      }
+      .social-link svg {
+        width: 15px;
+        height: 15px;
+      }
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
+  <div class="page">
 
-    <img
-      src="https://cypherski.com/cdn/shop/files/CYPHER_LOGO_BLACK.png?v=1768250453&width=800"
-      alt="CYPHERSKI"
-      class="logo"
-    />
+    <div class="logo-wrap">
+      <span class="logo-text">CYPHERSKI</span>
+    </div>
 
-    <div class="primary-links">
-      <a class="link" href="https://www.youtube.com/watch?v=jTr0Ew03W5A" target="_blank" rel="noopener">
-        Watch on YouTube
+    <div class="cards">
+
+      <a class="card" href="https://www.youtube.com/watch?v=jTr0Ew03W5A" target="_blank" rel="noopener">
+        <div class="card-left">
+          <span class="card-eyebrow">Latest video</span>
+          <span class="card-title">Watch on YouTube</span>
+        </div>
+        <span class="card-arrow">↗</span>
       </a>
-      <a class="link" href="https://www.type2ski.co/collabs" target="_blank" rel="noopener">
-        Buy Cypher × Type2 Skis
+
+      <a class="card" href="https://www.type2ski.co/collabs" target="_blank" rel="noopener">
+        <div class="card-left">
+          <span class="card-eyebrow">Collab drop</span>
+          <span class="card-title">Buy Cypher × Type2 Skis</span>
+          <span class="card-tag">Limited</span>
+        </div>
+        <span class="card-arrow">↗</span>
       </a>
+
     </div>
 
     <div class="divider"></div>
@@ -155,37 +268,29 @@
 
       <!-- Instagram -->
       <a class="social-link" href="https://www.instagram.com/cypherski/" target="_blank" rel="noopener" aria-label="Instagram">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.334 3.608 1.308.975.975 1.246 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.334 2.633-1.308 3.608-.975.975-2.242 1.246-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.334-3.608-1.308-.975-.975-1.246-2.242-1.308-3.608C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.062-1.366.334-2.633 1.308-3.608C4.516 2.497 5.783 2.226 7.15 2.163 8.416 2.105 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.013 7.052.072 5.197.157 3.355.673 2.014 2.014.673 3.355.157 5.197.072 7.052.013 8.332 0 8.741 0 12c0 3.259.013 3.668.072 4.948.085 1.855.601 3.697 1.942 5.038 1.341 1.341 3.183 1.857 5.038 1.942C8.332 23.987 8.741 24 12 24c3.259 0 3.668-.013 4.948-.072 1.855-.085 3.697-.601 5.038-1.942 1.341-1.341 1.857-3.183 1.942-5.038C23.987 15.668 24 15.259 24 12c0-3.259-.013-3.668-.072-4.948-.085-1.855-.601-3.697-1.942-5.038C20.645.673 18.803.157 16.948.072 15.668.013 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
-        </svg>
-      </a>
-
-      <!-- Facebook -->
-      <a class="social-link" href="https://www.facebook.com/cypherski" target="_blank" rel="noopener" aria-label="Facebook">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
-        </svg>
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.334 3.608 1.308.975.975 1.246 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.334 2.633-1.308 3.608-.975.975-2.242 1.246-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.334-3.608-1.308-.975-.975-1.246-2.242-1.308-3.608C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.062-1.366.334-2.633 1.308-3.608C4.516 2.497 5.783 2.226 7.15 2.163 8.416 2.105 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.013 7.052.072 5.197.157 3.355.673 2.014 2.014.673 3.355.157 5.197.072 7.052.013 8.332 0 8.741 0 12c0 3.259.013 3.668.072 4.948.085 1.855.601 3.697 1.942 5.038 1.341 1.341 3.183 1.857 5.038 1.942C8.332 23.987 8.741 24 12 24c3.259 0 3.668-.013 4.948-.072 1.855-.085 3.697-.601 5.038-1.942 1.341-1.341 1.857-3.183 1.942-5.038C23.987 15.668 24 15.259 24 12c0-3.259-.013-3.668-.072-4.948-.085-1.855-.601-3.697-1.942-5.038C20.645.673 18.803.157 16.948.072 15.668.013 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
       </a>
 
       <!-- TikTok -->
       <a class="social-link" href="https://www.tiktok.com/@cypher.ski" target="_blank" rel="noopener" aria-label="TikTok">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/>
-        </svg>
+        <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+      </a>
+
+      <!-- Facebook -->
+      <a class="social-link" href="https://www.facebook.com/cypherski" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
       </a>
 
       <!-- YouTube -->
       <a class="social-link" href="https://www.youtube.com/watch?v=jTr0Ew03W5A" target="_blank" rel="noopener" aria-label="YouTube">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-        </svg>
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
       </a>
 
     </div>
 
   </div>
 
-  <p class="footer">© Cypherski</p>
+  <p class="footer">© 2025 Cypherski</p>
 
 </body>
 </html>
