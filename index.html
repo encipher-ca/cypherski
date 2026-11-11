@@ -328,7 +328,16 @@
     }
 
     // Reduced motion: hold the poster frame instead of playing the clip
-    if (reduceMotion) { clip.removeAttribute('autoplay'); clip.pause(); }
+    if (reduceMotion) {
+      clip.removeAttribute('autoplay');
+      clip.pause();
+    } else {
+      // Some phones (iPhone Low Power Mode) block autoplay: start on first touch or scroll
+      const start = () => clip.play().catch(() => {});
+      start();
+      ['touchstart', 'pointerdown', 'scroll'].forEach(ev =>
+        window.addEventListener(ev, start, { once: true, passive: true }));
+    }
 
     window.addEventListener('resize', resize);
     resize();
