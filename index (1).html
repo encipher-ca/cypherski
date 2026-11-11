@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>CYPHERSKI</title>
+  <meta name="description" content="Cypherski. Ski films, park and street." />
+  <meta property="og:title" content="CYPHERSKI" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://cypherski.com" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#000000" />
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-grotesk@500,700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #000;
+      --snow: #fff;
+      --fog: #9a9a9a;
+      --line: rgba(255,255,255,0.22);
+      --pad: clamp(16px, 3vw, 40px);
+      --font: 'Clash Grotesk', 'Arial Black', Helvetica, sans-serif;
+    }
+
+    html, body {
+      background: var(--black);
+      color: var(--snow);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #terrain {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      display: block;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      padding:
+        calc(var(--pad) + env(safe-area-inset-top, 0px))
+        var(--pad)
+        calc(var(--pad) + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* Wordmark: SVG text is stretched to the exact width, so it can never clip */
+    h1 { line-height: 0; }
+    .wordmark {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+    .wordmark text {
+      font-family: var(--font);
+      font-weight: 700;
+      fill: var(--snow);
+    }
+
+    .stage { flex: 1; min-height: 34vh; }
+
+    /* Links */
+    .links { display: flex; flex-direction: column; }
+
+    .link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: clamp(16px, 2.4vw, 26px) clamp(16px, 2vw, 28px);
+      background: var(--black);
+      border: 1px solid var(--line);
+      color: var(--snow);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: clamp(24px, 4.6vw, 56px);
+      line-height: 1;
+      letter-spacing: -0.01em;
+      transition: background-color 0.18s ease, color 0.18s ease;
+    }
+    .link + .link { border-top: none; }
+
+    .link .arrow {
+      font-weight: 500;
+      transition: transform 0.2s ease;
+    }
+
+    .link:hover,
+    .link:focus-visible {
+      background: var(--snow);
+      color: var(--black);
+      outline: none;
+    }
+    .link:hover .arrow,
+    .link:focus-visible .arrow { transform: translate(4px, -4px); }
+    .link:active { background: var(--snow); color: var(--black); }
+
+    /* Bottom bar */
+    .bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-top: clamp(18px, 2.4vw, 28px);
+    }
+
+    .socials { display: flex; align-items: center; gap: clamp(20px, 3vw, 28px); }
+
+    .socials a {
+      color: var(--snow);
+      display: flex;
+      padding: 4px;
+      margin: -4px;
+      transition: opacity 0.15s ease;
+    }
+    .socials a:hover { opacity: 0.6; }
+    .socials a:focus-visible { outline: 1px solid var(--snow); outline-offset: 4px; }
+    .socials svg { width: 24px; height: 24px; fill: currentColor; }
+
+    .copy {
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--snow);
+    }
+
+    /* One page-load moment: wordmark wipes in */
+    .wordmark { clip-path: inset(0 100% 0 0); animation: wipe 1.1s cubic-bezier(0.7,0,0.2,1) 0.15s forwards; }
+    @keyframes wipe { to { clip-path: inset(0 0 0 0); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .wordmark { animation: none; clip-path: none; }
+      .link, .link .arrow { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="terrain" aria-hidden="true"></canvas>
+
+  <main class="page">
+
+    <h1>
+      <svg class="wordmark" viewBox="0 0 1000 132" role="img" aria-label="Cypherski">
+        <text x="0" y="128" font-size="178" textLength="1000" lengthAdjust="spacingAndGlyphs">CYPHERSKI</text>
+      </svg>
+    </h1>
+
+    <div class="stage"></div>
+
+    <nav class="links">
+      <a class="link" href="https://www.youtube.com/watch?v=jTr0Ew03W5A" target="_blank" rel="noopener">
+        <span>YouTube</span><span class="arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="link" href="https://www.type2ski.co/collabs" target="_blank" rel="noopener">
+        <span>Cypher x Type2 Skis</span><span class="arrow" aria-hidden="true">↗</span>
+      </a>
+    </nav>
+
+    <div class="bar">
+      <div class="socials">
+        <a href="https://www.instagram.com/cypherski/" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.334 3.608 1.308.975.975 1.246 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.334 2.633-1.308 3.608-.975.975-2.242 1.246-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.334-3.608-1.308-.975-.975-1.246-2.242-1.308-3.608C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.062-1.366.334-2.633 1.308-3.608C4.516 2.497 5.783 2.226 7.15 2.163 8.416 2.105 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.013 7.052.072 5.197.157 3.355.673 2.014 2.014.673 3.355.157 5.197.072 7.052.013 8.332 0 8.741 0 12c0 3.259.013 3.668.072 4.948.085 1.855.601 3.697 1.942 5.038 1.341 1.341 3.183 1.857 5.038 1.942C8.332 23.987 8.741 24 12 24c3.259 0 3.668-.013 4.948-.072 1.855-.085 3.697-.601 5.038-1.942 1.341-1.341 1.857-3.183 1.942-5.038C23.987 15.668 24 15.259 24 12c0-3.259-.013-3.668-.072-4.948-.085-1.855-.601-3.697-1.942-5.038C20.645.673 18.803.157 16.948.072 15.668.013 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@cypher.ski" target="_blank" rel="noopener" aria-label="TikTok">
+          <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+        </a>
+        <a href="https://www.facebook.com/cypherski" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/watch?v=jTr0Ew03W5A" target="_blank" rel="noopener" aria-label="YouTube">
+          <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </a>
+      </div>
+      <p class="copy">© Cypherski</p>
+    </div>
+
+  </main>
+
+  <script>
+    // Ridgeline terrain: stacked lines that rise into peaks and slowly morph, plus falling snow
+    const canvas = document.getElementById('terrain');
+    const ctx = canvas.getContext('2d');
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let W, H;
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (reduceMotion) draw(0);
+    }
+
+    function wave(a, i) {
+      return Math.sin(a) * 0.5 + Math.sin(a * 2.13 + i * 0.7) * 0.3 + Math.sin(a * 4.7 + i * 1.3) * 0.2;
+    }
+
+    // Mountain range envelope: one big centre peak, two smaller shoulders
+    function envelope(u) {
+      const g = (c, s) => Math.exp(-Math.pow((u - c) / s, 2));
+      return g(0.5, 0.2) * 0.9 + g(0.16, 0.09) * 0.4 + g(0.82, 0.1) * 0.5;
+    }
+
+    const flakes = Array.from({ length: 110 }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      r: Math.random() * 1.6 + 0.4,
+      v: Math.random() * 0.0009 + 0.0003,
+      d: Math.random() * Math.PI * 2,
+      a: Math.random() * 0.5 + 0.2,
+    }));
+
+    function draw(t) {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, W, H);
+
+      const lines = Math.max(22, Math.min(48, Math.round(H / 17)));
+      const top = H * 0.24;
+      const bottom = H * 0.98;
+      const gap = (bottom - top) / lines;
+      const amp = Math.min(H * 0.26, 220);
+      const drift = t * 0.00009;
+      const step = 4;
+
+      for (let i = 0; i < lines; i++) {
+        const y0 = top + i * gap;
+        const pts = [];
+        for (let px = 0; px <= W + step; px += step) {
+          const u = px / W;
+          let v = Math.max(0, wave(u * 9 + drift * 6 + i * 0.33, i));
+          v = Math.pow(v, 1.7);
+          pts.push(px, y0 - v * amp * envelope(u));
+        }
+
+        // Fill under the line in black so nearer ridges hide the ones behind
+        ctx.beginPath();
+        ctx.moveTo(pts[0], pts[1]);
+        for (let k = 2; k < pts.length; k += 2) ctx.lineTo(pts[k], pts[k + 1]);
+        ctx.lineTo(W + step, H);
+        ctx.lineTo(0, H);
+        ctx.closePath();
+        ctx.fillStyle = '#000';
+        ctx.fill();
+
+        // Stroke only the ridge
+        ctx.beginPath();
+        ctx.moveTo(pts[0], pts[1]);
+        for (let k = 2; k < pts.length; k += 2) ctx.lineTo(pts[k], pts[k + 1]);
+        ctx.strokeStyle = `rgba(255,255,255,${0.18 + 0.62 * (i / lines)})`;
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+      }
+
+      // Snow
+      for (const f of flakes) {
+        ctx.beginPath();
+        ctx.arc(f.x * W, f.y * H, f.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${f.a})`;
+        ctx.fill();
+        if (!reduceMotion) {
+          f.y += f.v;
+          f.x += Math.sin(t * 0.0008 + f.d) * 0.0002;
+          if (f.y > 1.02) { f.y = -0.02; f.x = Math.random(); }
+        }
+      }
+    }
+
+    function loop(t) {
+      draw(t);
+      requestAnimationFrame(loop);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    if (!reduceMotion) requestAnimationFrame(loop);
+  </script>
+
+</body>
+</html>
